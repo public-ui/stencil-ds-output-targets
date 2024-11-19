@@ -1,4 +1,4 @@
-# @stencil/react-output-target
+# @public-ui/stencil-react-output-target
 
 Stencil can generate React class component wrappers for your web components. This allows your Stencil components to be used within a React application. The benefits of using Stencil's component wrappers over the standard web components include:
 
@@ -12,7 +12,7 @@ For a detailed guide on how to add the react output target to a project, visit: 
 ## Installation
 
 ```bash
-npm install @stencil/react-output-target
+npm install @public-ui/stencil-react-output-target
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ In your `stencil.config.ts` add the following configuration to the `outputTarget
 
 ```ts
 import { Config } from '@stencil/core';
-import { reactOutputTarget } from '@stencil/react-output-target';
+import { reactOutputTarget } from '@public-ui/stencil-react-output-target';
 
 export const config: Config = {
   namespace: 'demo',
@@ -50,3 +50,13 @@ export const config: Config = {
 | `includeDefineCustomElements` | If `true`, all Web Components will automatically be registered with the Custom Elements Registry. This can only be used when lazy loading Web Components and will not work when `includeImportCustomElements` is `true`.                                                                                                         |
 | `includeImportCustomElements` | If `true`, the output target will import the custom element instance and register it with the Custom Elements Registry when the component is imported inside of a user's app. This can only be used with the [Custom Elements Bundle](https://stenciljs.com/docs/custom-elements) and will not work with lazy loaded components. |
 | `customElementsDir`           | This is the directory where the custom elements are imported from when using the [Custom Elements Bundle](https://stenciljs.com/docs/custom-elements). Defaults to the `components` directory. Only applies when `includeImportCustomElements` is `true`.                                                                        |
+
+## Runtime Config Options
+
+If you want to use custom tag names, you can use the `setTagNameTransformer` function to define a function which transforms the tag names.  
+It is recommended to configure this before you use the component library.
+
+```tsx
+import { setTagNameTransformer } from '<your-library>/react';
+setTagNameTransformer((tagName: string) => `${tagName}-v2`);
+````

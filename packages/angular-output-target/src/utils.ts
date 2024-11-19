@@ -16,6 +16,12 @@ export const dashToPascalCase = (str: string) =>
     .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
     .join('');
 
+export const dashToCamelCase = (str: string) =>
+  toLowerCase(str)
+    .split('-')
+    .map((segment, index) => (index === 0 ? segment : segment.charAt(0).toUpperCase() + segment.slice(1)))
+    .join('');
+
 export function sortBy<T>(array: T[], prop: (item: T) => string) {
   return array.slice().sort((a, b) => {
     const nameA = prop(a);
@@ -150,7 +156,8 @@ export const createComponentEventTypeImports = (
         const newTypeName = `I${componentTagName}${typeName}`;
         // Prevents duplicate imports for the same type.
         if (!namedImports.has(newTypeName)) {
-          imports.push(`import type { ${typeName} as ${newTypeName} } from '${importPathName}';`);
+          /* import type is not possible  -> ng@^8 */
+          imports.push(`import { ${typeName} as ${newTypeName} } from '${importPathName}';`);
           namedImports.add(newTypeName);
         }
       }

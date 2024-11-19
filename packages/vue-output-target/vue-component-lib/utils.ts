@@ -1,6 +1,7 @@
 // @ts-nocheck
 // It's easier and safer for Volar to disable typechecking and let the return type inference do its job.
 import { defineComponent, getCurrentInstance, h, inject, ref, Ref, withDirectives } from 'vue';
+import { tagNameTransformer } from './tagNameTransformer';
 
 export interface InputProps<T> {
   modelValue?: T;
@@ -91,8 +92,17 @@ export const defineContainer = <Props, VModelType = string | number | boolean>(
         const eventsNames = Array.isArray(modelUpdateEvent) ? modelUpdateEvent : [modelUpdateEvent];
         eventsNames.forEach((eventName: string) => {
           el.addEventListener(eventName.toLowerCase(), (e: Event) => {
-            modelPropValue = (e?.target as any)[modelProp];
-            emit(UPDATE_VALUE_EVENT, modelPropValue);
+            /**
+             * Only update the v-model binding if the event's target is the element we are
+             * listening on. For example, Component A could emit ionChange, but it could also
+             * have a descendant Component B that also emits ionChange. We only want to update
+             * the v-model for Component A when ionChange originates from that element and not
+             * when ionChange bubbles up from Component B.
+             */
+            if (e.target.tagName === el.tagName) {
+              modelPropValue = (e?.target as any)[modelProp];
+              emit(UPDATE_VALUE_EVENT, modelPropValue);
+            }
           });
         });
       },
@@ -176,11 +186,13 @@ export const defineContainer = <Props, VModelType = string | number | boolean>(
         }
       }
 
+      const newTagName = typeof tagNameTransformer === 'function' ? tagNameTransformer(name) : name;
+
       /**
        * vModelDirective is only needed on components that support v-model.
        * As a result, we conditionally call withDirectives with v-model components.
        */
-      const node = h(name, propsToAdd, slots.default && slots.default());
+      const node = h(newTagName, propsToAdd, slots.default && slots.default());
       return modelProp === undefined ? node : withDirectives(node, [[vModelDirective]]);
     };
   });

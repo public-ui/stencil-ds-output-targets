@@ -1,4 +1,4 @@
-# @stencil/angular-output-target
+# @public-ui/stencil-angular-output-target
 
 Stencil can generate Angular component wrappers for your web components. This allows your Stencil components to be used within an Angular application. The benefits of using Stencil's component wrappers over the standard web components include:
 
@@ -11,7 +11,7 @@ For a detailed guide on how to add the angular output target to a project, visit
 ## Installation
 
 ```bash
-npm install @stencil/angular-output-target
+npm install @public-ui/stencil-angular-output-target
 ```
 
 ## Usage
@@ -20,7 +20,7 @@ In your `stencil.config.ts` add the following configuration to the `outputTarget
 
 ```ts
 import { Config } from '@stencil/core';
-import { angularOutputTarget } from '@stencil/angular-output-target';
+import { angularOutputTarget } from '@public-ui/stencil-angular-output-target';
 
 export const config: Config = {
   namespace: 'demo',
@@ -49,3 +49,13 @@ export const config: Config = {
 | `excludeComponents`    | An array of tag names to exclude from generating component wrappers for. This is helpful when have a custom framework implementation of a specific component or need to extend the base component wrapper behavior.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `outputType`           | Specifies the type of output to be generated. It can take one of the following values: <br />1. `component`: Generates all the component wrappers to be declared on an Angular module. This option is required for Stencil projects using the `dist` hydrated output.<br /> 2. `scam`: Generates a separate Angular module for each component.<br /> 3. `standalone`: Generates standalone component wrappers.<br /> Both `scam` and `standalone` options are compatible with the `dist-custom-elements` output. <br />Note: Please choose the appropriate `outputType` based on your project's requirements and the desired output structure. Defaults to `component`. |
 | `customElementsDir`    | This is the directory where the custom elements are imported from when using the [Custom Elements Bundle](https://stenciljs.com/docs/custom-elements). Defaults to the `components` directory. Only applies for `outputType: "scam"` or `outputType: "standalone"`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+
+## Runtime Config Options
+
+If you want to use custom tag names, you can use the `setTagNameTransformer` function to define a function which transforms the tag names.  
+It is recommended to configure this before you use the component library.
+
+```tsx
+import { setTagNameTransformer } from '<your-library>/angular';
+setTagNameTransformer((tagName: string) => `${tagName}-v2`);
+````
