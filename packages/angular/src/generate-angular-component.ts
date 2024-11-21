@@ -1,7 +1,7 @@
 import type { CompilerJsDoc, ComponentCompilerEvent, ComponentCompilerProperty } from '@stencil/core/internal';
 
-import { createComponentEventTypeImports, dashToPascalCase, formatToQuotedList } from './utils';
 import type { OutputType } from './types';
+import { createComponentEventTypeImports, dashToPascalCase, formatToQuotedList } from './utils';
 
 /**
  * Creates a property declaration.
@@ -75,7 +75,7 @@ export const createAngularComponentDefinition = (
   let standaloneOption = '';
 
   if (standalone && includeImportCustomElements) {
-    standaloneOption = `\n  standalone: true`;
+    standaloneOption = `\n  standalone: true,`;
   }
 
   const propertyDeclarations = inlineComponentProps.map((m) =>

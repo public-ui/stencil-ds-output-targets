@@ -32,6 +32,6 @@
   },
   "dependencies": {
     "component-library": "workspace:*",
-    "@stencil/vue-output-target": "workspace:*"
+    "@public-ui/stencil-vue-output-target": "workspace:*"
   }
 }

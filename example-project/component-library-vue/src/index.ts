@@ -1,7 +1,8 @@
 /* eslint-disable */
 /* tslint:disable */
 /* auto-generated vue proxies */
-import { defineContainer, defineStencilSSRComponent } from '@stencil/vue-output-target/runtime';
+import { defineContainer, defineStencilSSRComponent } from '@public-ui/stencil-vue-output-target/runtime';
+import { setTagNameTransformer } from './tag-name-transformer';
 
 import type { JSX } from 'component-library/components';
 
@@ -290,3 +291,4 @@ export const MyRange = /*@__PURE__*/ globalThis.window ? defineContainer<JSX.MyR
   }
 });
 
+export { setTagNameTransformer };

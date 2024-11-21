@@ -1,4 +1,5 @@
 import { defineComponent, getCurrentInstance, h, inject, ref, Ref, withDirectives } from 'vue';
+import { tagNameTransformer } from './tag-name-transformer';
 
 export { defineStencilSSRComponent } from './ssr';
 export interface InputProps<T> {
@@ -217,11 +218,13 @@ export const defineContainer = <Props, VModelType = string | number | boolean>(
         };
       }
 
+      const transformedTagName = typeof tagNameTransformer === 'function' ? tagNameTransformer  (name) : name;
+
       /**
        * vModelDirective is only needed on components that support v-model.
        * As a result, we conditionally call withDirectives with v-model components.
        */
-      const node = h(name, propsToAdd, slots.default && slots.default());
+      const node = h(transformedTagName, propsToAdd, slots.default && slots.default());
       return modelProp === undefined ? node : withDirectives(node, [[vModelDirective]]);
     };
   });

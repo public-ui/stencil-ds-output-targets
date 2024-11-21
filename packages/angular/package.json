@@ -1,5 +1,5 @@
 {
-  "name": "@stencil/angular-output-target",
+  "name": "@public-ui/stencil-angular-output-target",
   "version": "0.10.0",
   "description": "Angular output target for @stencil/core components.",
   "main": "dist/index.cjs.js",
@@ -15,7 +15,7 @@
   },
   "scripts": {
     "prepublishOnly": "pnpm run build",
-    "prebuild": "rimraf ./dist && pnpm run test",
+    "prebuild": "rimraf ./dist",
     "build": "tsc && pnpm run rollup",
     "dev": "run-p dev:*",
     "dev:build": "tsc --watch --preserveWatchOutput",

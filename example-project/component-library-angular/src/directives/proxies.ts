@@ -1,8 +1,11 @@
 /* tslint:disable */
 /* auto-generated angular directive proxies */
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, NgZone } from '@angular/core';
-
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnChanges, ViewChild, forwardRef, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, NgZone } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ProxyCmp, proxyOutputs } from './angular-component-lib/utils';
+import { ReplaceTagDirective } from './angular-component-lib/replace-tag-directive';
+import { StencilProxyComponent } from './angular-component-lib/stencil-proxy-component';
+import { tagNameTransformer } from './angular-component-lib/tag-name-transformer';
 
 import { Components } from 'component-library';
 
@@ -59,7 +62,7 @@ export class MyCheckbox {
 }
 
 
-import type { CheckboxChangeEventDetail as IMyCheckboxCheckboxChangeEventDetail } from 'component-library';
+import /* import type - is not possible with ng@^8 */ { CheckboxChangeEventDetail as IMyCheckboxCheckboxChangeEventDetail } from 'component-library';
 
 export declare interface MyCheckbox extends Components.MyCheckbox {
   /**
@@ -126,7 +129,7 @@ export class MyInput {
 }
 
 
-import type { InputChangeEventDetail as IMyInputInputChangeEventDetail } from 'component-library';
+import /* import type - is not possible with ng@^8 */ { InputChangeEventDetail as IMyInputInputChangeEventDetail } from 'component-library';
 
 export declare interface MyInput extends Components.MyInput {
   /**
@@ -169,7 +172,7 @@ export class MyPopover {
 }
 
 
-import type { OverlayEventDetail as IMyPopoverOverlayEventDetail } from 'component-library';
+import /* import type - is not possible with ng@^8 */ { OverlayEventDetail as IMyPopoverOverlayEventDetail } from 'component-library';
 
 export declare interface MyPopover extends Components.MyPopover {
   /**
@@ -247,7 +250,7 @@ export class MyRadioGroup {
 }
 
 
-import type { RadioGroupChangeEventDetail as IMyRadioGroupRadioGroupChangeEventDetail } from 'component-library';
+import /* import type - is not possible with ng@^8 */ { RadioGroupChangeEventDetail as IMyRadioGroupRadioGroupChangeEventDetail } from 'component-library';
 
 export declare interface MyRadioGroup extends Components.MyRadioGroup {
   /**
@@ -277,7 +280,7 @@ export class MyRange {
 }
 
 
-import type { RangeChangeEventDetail as IMyRangeRangeChangeEventDetail } from 'component-library';
+import /* import type - is not possible with ng@^8 */ { RangeChangeEventDetail as IMyRangeRangeChangeEventDetail } from 'component-library';
 
 export declare interface MyRange extends Components.MyRange {
   /**
