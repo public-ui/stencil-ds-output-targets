@@ -38,8 +38,8 @@ describe('createComponentWrappers', () => {
 
 /* eslint-disable */
 
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from '@public-ui/stencil-react-output-target/runtime';
+import { createComponent } from '@public-ui/stencil-react-output-target/runtime';
 import { MyComponent as MyComponentElement, defineCustomElement as defineMyComponent } from "my-package/dist/custom-elements/my-component.js";
 import React from 'react';
 
@@ -92,8 +92,8 @@ export const MyComponent: StencilReactComponent<MyComponentElement, MyComponentE
 
 /* eslint-disable */
 
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from '@public-ui/stencil-react-output-target/runtime';
+import { createComponent } from '@public-ui/stencil-react-output-target/runtime';
 import { MyComponent as MyComponentElement, defineCustomElement as defineMyComponent } from "my-package/dist/custom-elements/my-component.js";
 import React from 'react';
 
@@ -206,8 +206,8 @@ export default MyComponent;
 
 /* eslint-disable */
 
-import type { EventName, StencilReactComponent } from '@stencil/react-output-target/runtime';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import type { EventName, StencilReactComponent } from '@public-ui/stencil-react-output-target/runtime';
+import { createComponent } from '@public-ui/stencil-react-output-target/runtime';
 import { type MyComponentCustomEvent } from "my-package";
 import { MyComponent as MyComponentElement, defineCustomElement as defineMyComponent } from "my-package/dist/custom-elements/my-component.js";
 import React from 'react';

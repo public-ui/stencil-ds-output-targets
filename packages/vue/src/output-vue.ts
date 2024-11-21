@@ -43,8 +43,8 @@ export function generateProxies(
   const imports = `/* eslint-disable */
 /* tslint:disable */
 /* auto-generated vue proxies */
-import { ${importKeys.join(', ')} } from '@stencil/vue-output-target/runtime';
-import { setTagNameTransformer } from './vue-component-lib/tagNameTransformer';\n`;
+import { ${importKeys.join(', ')} } from '@public-ui/stencil-vue-output-target/runtime';
+import { setTagNameTransformer } from './tag-name-transformer';\n`;
 
   const generateTypeImports = () => {
     if (outputTarget.componentCorePackage !== undefined) {

@@ -114,9 +114,9 @@ export function generateProxies(
 ${createImportStatement(angularCoreImports, '@angular/core')}
 ${createImportStatement(['CommonModule'], '@angular/common')}
 ${createImportStatement(componentLibImports, './angular-component-lib/utils')}
-${createImportStatement(['ReplaceTagDirective'], './angular-component-lib/ReplaceTagDirective')}
-${createImportStatement(['StencilProxyComponent'], './angular-component-lib/StencilProxyComponent')}
-${createImportStatement(['tagNameTransformer'], './angular-component-lib/tagNameTransformer')}\n`;
+${createImportStatement(['ReplaceTagDirective'], './angular-component-lib/replace-tag-directive')}
+${createImportStatement(['StencilProxyComponent'], './angular-component-lib/stencil-proxy-component')}
+${createImportStatement(['tagNameTransformer'], './angular-component-lib/tag-name-transformer')}\n`;
   /**
    * Generate JSX import type from correct location.
    * When using custom elements build, we need to import from

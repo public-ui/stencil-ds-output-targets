@@ -1,5 +1,5 @@
 import { AfterViewChecked, Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
-import { StencilProxyComponent } from './StencilProxyComponent';
+import { StencilProxyComponent } from './stencil-proxy-component';
 
 @Directive({
   selector: '[replaceTag]',

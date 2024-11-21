@@ -1,6 +1,23 @@
-import { describe, it, expect } from 'vitest';
-import type { ComponentCompilerProperty } from '@stencil/core/internal';
 import { createComponentTypeDefinition, createAngularComponentDefinition } from '../src/generate-angular-component';
+
+const getTemplate = (inputAttributes: string = '') => `
+    <ng-container *ngIf="hasTagNameTransformer; else defaultCase">
+      <stencil-ng-proxy
+        ${inputAttributes}
+        *replaceTag="tagName"
+        #replaceTagHost
+      >
+        <ng-container *ngTemplateOutlet="ngContentOutlet"></ng-container>
+      </stencil-ng-proxy>
+    </ng-container>
+
+    <ng-template #defaultCase>
+      <ng-container *ngTemplateOutlet="ngContentOutlet"></ng-container>
+    </ng-template>
+
+    <ng-template #ngContentOutlet>
+      <ng-content></ng-content>
+    </ng-template>`;
 
 describe('createAngularComponentDefinition()', () => {
   describe('www output', () => {
@@ -12,36 +29,75 @@ describe('createAngularComponentDefinition()', () => {
 @Component({
   selector: 'my-component',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
+  template: \`${getTemplate()}\`,
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: [],
+${'  '}
+  providers: [
+    {provide: StencilProxyComponent, useExisting: forwardRef(() => MyComponent)}
+  ],
 })
-export class MyComponent {
+export class MyComponent extends StencilProxyComponent implements OnChanges {
+${'  '}
   protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
+  public availableInputProperties = [];
+  public hasTagNameTransformer: boolean;
+  public tagName: string;
+  @ViewChild(ReplaceTagDirective) replaceTagDirective: ReplaceTagDirective;
+  constructor(private changeDetectorRef: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    super();
+    changeDetectorRef.detach();
+    const originalTagName = 'my-component';
+    this.tagName = typeof tagNameTransformer === 'function' ? tagNameTransformer(originalTagName) : originalTagName;
+    this.hasTagNameTransformer = typeof tagNameTransformer === 'function';
     this.el = r.nativeElement;
+  }
+  ngOnChanges(): void {
+    if (typeof this.replaceTagDirective === 'object' && this.replaceTagDirective !== null && typeof this.replaceTagDirective.handlePropertyChanges === 'function') {
+      this.replaceTagDirective.handlePropertyChanges();
+    }
+    this.changeDetectorRef.detectChanges();
   }
 }`);
     });
 
     it('generates a component with inputs', () => {
       const component = createAngularComponentDefinition('my-component', ['my-input', 'my-other-input'], [], [], false);
-      expect(component).toMatch(`@ProxyCmp({
+      expect(component).toBe(`@ProxyCmp({
   inputs: ['my-input', 'my-other-input']
 })
 @Component({
   selector: 'my-component',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
+  template: \`${getTemplate('[my-input]="my-input" [my-other-input]="my-other-input"')}\`,
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['my-input', 'my-other-input'],
+${'  '}
+  providers: [
+    {provide: StencilProxyComponent, useExisting: forwardRef(() => MyComponent)}
+  ],
 })
-export class MyComponent {
+export class MyComponent extends StencilProxyComponent implements OnChanges {
+    myInput: any;
+  myOtherInput: any;
   protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
+  public availableInputProperties = ['my-input', 'my-other-input'];
+  public hasTagNameTransformer: boolean;
+  public tagName: string;
+  @ViewChild(ReplaceTagDirective) replaceTagDirective: ReplaceTagDirective;
+  constructor(private changeDetectorRef: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    super();
+    changeDetectorRef.detach();
+    const originalTagName = 'my-component';
+    this.tagName = typeof tagNameTransformer === 'function' ? tagNameTransformer(originalTagName) : originalTagName;
+    this.hasTagNameTransformer = typeof tagNameTransformer === 'function';
     this.el = r.nativeElement;
+  }
+  ngOnChanges(): void {
+    if (typeof this.replaceTagDirective === 'object' && this.replaceTagDirective !== null && typeof this.replaceTagDirective.handlePropertyChanges === 'function') {
+      this.replaceTagDirective.handlePropertyChanges();
+    }
+    this.changeDetectorRef.detectChanges();
   }
 }`);
     });
@@ -55,21 +111,40 @@ export class MyComponent {
         false
       );
 
-      expect(component).toMatch(`@ProxyCmp({
+      expect(component).toBe(`@ProxyCmp({
 })
 @Component({
   selector: 'my-component',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
+  template: \`${getTemplate()}\`,
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: [],
+${'  '}
+  providers: [
+    {provide: StencilProxyComponent, useExisting: forwardRef(() => MyComponent)}
+  ],
 })
-export class MyComponent {
+export class MyComponent extends StencilProxyComponent implements OnChanges {
+${'  '}
   protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
+  public availableInputProperties = [];
+  public hasTagNameTransformer: boolean;
+  public tagName: string;
+  @ViewChild(ReplaceTagDirective) replaceTagDirective: ReplaceTagDirective;
+  constructor(private changeDetectorRef: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    super();
+    changeDetectorRef.detach();
+    const originalTagName = 'my-component';
+    this.tagName = typeof tagNameTransformer === 'function' ? tagNameTransformer(originalTagName) : originalTagName;
+    this.hasTagNameTransformer = typeof tagNameTransformer === 'function';
     this.el = r.nativeElement;
     proxyOutputs(this, this.el, ['my-output', 'my-other-output']);
+  }
+  ngOnChanges(): void {
+    if (typeof this.replaceTagDirective === 'object' && this.replaceTagDirective !== null && typeof this.replaceTagDirective.handlePropertyChanges === 'function') {
+      this.replaceTagDirective.handlePropertyChanges();
+    }
+    this.changeDetectorRef.detectChanges();
   }
 }`);
     });
@@ -77,21 +152,40 @@ export class MyComponent {
     it('generates a component with methods', () => {
       const component = createAngularComponentDefinition('my-component', [], [], ['myMethod', 'myOtherMethod'], false);
 
-      expect(component).toMatch(`@ProxyCmp({
+      expect(component).toBe(`@ProxyCmp({
   methods: ['myMethod', 'myOtherMethod']
 })
 @Component({
   selector: 'my-component',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
+  template: \`${getTemplate()}\`,
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: [],
+${'  '}
+  providers: [
+    {provide: StencilProxyComponent, useExisting: forwardRef(() => MyComponent)}
+  ],
 })
-export class MyComponent {
+export class MyComponent extends StencilProxyComponent implements OnChanges {
+${'  '}
   protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
+  public availableInputProperties = [];
+  public hasTagNameTransformer: boolean;
+  public tagName: string;
+  @ViewChild(ReplaceTagDirective) replaceTagDirective: ReplaceTagDirective;
+  constructor(private changeDetectorRef: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    super();
+    changeDetectorRef.detach();
+    const originalTagName = 'my-component';
+    this.tagName = typeof tagNameTransformer === 'function' ? tagNameTransformer(originalTagName) : originalTagName;
+    this.hasTagNameTransformer = typeof tagNameTransformer === 'function';
     this.el = r.nativeElement;
+  }
+  ngOnChanges(): void {
+    if (typeof this.replaceTagDirective === 'object' && this.replaceTagDirective !== null && typeof this.replaceTagDirective.handlePropertyChanges === 'function') {
+      this.replaceTagDirective.handlePropertyChanges();
+    }
+    this.changeDetectorRef.detectChanges();
   }
 }`);
     });
@@ -107,15 +201,34 @@ export class MyComponent {
 @Component({
   selector: 'my-component',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
+  template: \`${getTemplate()}\`,
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: [],
+${'  '}
+  providers: [
+    {provide: StencilProxyComponent, useExisting: forwardRef(() => MyComponent)}
+  ],
 })
-export class MyComponent {
+export class MyComponent extends StencilProxyComponent implements OnChanges {
+${'  '}
   protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
+  public availableInputProperties = [];
+  public hasTagNameTransformer: boolean;
+  public tagName: string;
+  @ViewChild(ReplaceTagDirective) replaceTagDirective: ReplaceTagDirective;
+  constructor(private changeDetectorRef: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    super();
+    changeDetectorRef.detach();
+    const originalTagName = 'my-component';
+    this.tagName = typeof tagNameTransformer === 'function' ? tagNameTransformer(originalTagName) : originalTagName;
+    this.hasTagNameTransformer = typeof tagNameTransformer === 'function';
     this.el = r.nativeElement;
+  }
+  ngOnChanges(): void {
+    if (typeof this.replaceTagDirective === 'object' && this.replaceTagDirective !== null && typeof this.replaceTagDirective.handlePropertyChanges === 'function') {
+      this.replaceTagDirective.handlePropertyChanges();
+    }
+    this.changeDetectorRef.detectChanges();
   }
 }`);
     });
@@ -130,15 +243,35 @@ export class MyComponent {
 @Component({
   selector: 'my-component',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
+  template: \`${getTemplate('[my-input]="my-input" [my-other-input]="my-other-input"')}\`,
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['my-input', 'my-other-input'],
+${'  '}
+  providers: [
+    {provide: StencilProxyComponent, useExisting: forwardRef(() => MyComponent)}
+  ],
 })
-export class MyComponent {
+export class MyComponent extends StencilProxyComponent implements OnChanges {
+    myInput: any;
+  myOtherInput: any;
   protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
+  public availableInputProperties = ['my-input', 'my-other-input'];
+  public hasTagNameTransformer: boolean;
+  public tagName: string;
+  @ViewChild(ReplaceTagDirective) replaceTagDirective: ReplaceTagDirective;
+  constructor(private changeDetectorRef: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    super();
+    changeDetectorRef.detach();
+    const originalTagName = 'my-component';
+    this.tagName = typeof tagNameTransformer === 'function' ? tagNameTransformer(originalTagName) : originalTagName;
+    this.hasTagNameTransformer = typeof tagNameTransformer === 'function';
     this.el = r.nativeElement;
+  }
+  ngOnChanges(): void {
+    if (typeof this.replaceTagDirective === 'object' && this.replaceTagDirective !== null && typeof this.replaceTagDirective.handlePropertyChanges === 'function') {
+      this.replaceTagDirective.handlePropertyChanges();
+    }
+    this.changeDetectorRef.detectChanges();
   }
 }`);
     });
@@ -151,22 +284,41 @@ export class MyComponent {
         [],
         true
       );
-      expect(component).toMatch(`@ProxyCmp({
+      expect(component).toBe(`@ProxyCmp({
   defineCustomElementFn: defineMyComponent
 })
 @Component({
   selector: 'my-component',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
+  template: \`${getTemplate()}\`,
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: [],
+${'  '}
+  providers: [
+    {provide: StencilProxyComponent, useExisting: forwardRef(() => MyComponent)}
+  ],
 })
-export class MyComponent {
+export class MyComponent extends StencilProxyComponent implements OnChanges {
+${'  '}
   protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
+  public availableInputProperties = [];
+  public hasTagNameTransformer: boolean;
+  public tagName: string;
+  @ViewChild(ReplaceTagDirective) replaceTagDirective: ReplaceTagDirective;
+  constructor(private changeDetectorRef: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    super();
+    changeDetectorRef.detach();
+    const originalTagName = 'my-component';
+    this.tagName = typeof tagNameTransformer === 'function' ? tagNameTransformer(originalTagName) : originalTagName;
+    this.hasTagNameTransformer = typeof tagNameTransformer === 'function';
     this.el = r.nativeElement;
     proxyOutputs(this, this.el, ['my-output', 'my-other-output']);
+  }
+  ngOnChanges(): void {
+    if (typeof this.replaceTagDirective === 'object' && this.replaceTagDirective !== null && typeof this.replaceTagDirective.handlePropertyChanges === 'function') {
+      this.replaceTagDirective.handlePropertyChanges();
+    }
+    this.changeDetectorRef.detectChanges();
   }
 }`);
     });
@@ -174,22 +326,41 @@ export class MyComponent {
     it('generates a component with methods', () => {
       const component = createAngularComponentDefinition('my-component', [], [], ['myMethod', 'myOtherMethod'], true);
 
-      expect(component).toMatch(`@ProxyCmp({
+      expect(component).toBe(`@ProxyCmp({
   defineCustomElementFn: defineMyComponent,
   methods: ['myMethod', 'myOtherMethod']
 })
 @Component({
   selector: 'my-component',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
+  template: \`${getTemplate()}\`,
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: [],
+${'  '}
+  providers: [
+    {provide: StencilProxyComponent, useExisting: forwardRef(() => MyComponent)}
+  ],
 })
-export class MyComponent {
+export class MyComponent extends StencilProxyComponent implements OnChanges {
+${'  '}
   protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
+  public availableInputProperties = [];
+  public hasTagNameTransformer: boolean;
+  public tagName: string;
+  @ViewChild(ReplaceTagDirective) replaceTagDirective: ReplaceTagDirective;
+  constructor(private changeDetectorRef: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    super();
+    changeDetectorRef.detach();
+    const originalTagName = 'my-component';
+    this.tagName = typeof tagNameTransformer === 'function' ? tagNameTransformer(originalTagName) : originalTagName;
+    this.hasTagNameTransformer = typeof tagNameTransformer === 'function';
     this.el = r.nativeElement;
+  }
+  ngOnChanges(): void {
+    if (typeof this.replaceTagDirective === 'object' && this.replaceTagDirective !== null && typeof this.replaceTagDirective.handlePropertyChanges === 'function') {
+      this.replaceTagDirective.handlePropertyChanges();
+    }
+    this.changeDetectorRef.detectChanges();
   }
 }`);
     });
@@ -203,52 +374,35 @@ export class MyComponent {
 @Component({
   selector: 'my-component',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
+  template: \`${getTemplate()}\`,
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: [],
-  standalone: true
+${'  '}
+  standalone: true,
+  providers: [
+    {provide: StencilProxyComponent, useExisting: forwardRef(() => MyComponent)}
+  ],
 })
-export class MyComponent {
+export class MyComponent extends StencilProxyComponent implements OnChanges {
+${'  '}
   protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
+  public availableInputProperties = [];
+  public hasTagNameTransformer: boolean;
+  public tagName: string;
+  @ViewChild(ReplaceTagDirective) replaceTagDirective: ReplaceTagDirective;
+  constructor(private changeDetectorRef: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    super();
+    changeDetectorRef.detach();
+    const originalTagName = 'my-component';
+    this.tagName = typeof tagNameTransformer === 'function' ? tagNameTransformer(originalTagName) : originalTagName;
+    this.hasTagNameTransformer = typeof tagNameTransformer === 'function';
     this.el = r.nativeElement;
   }
-}`);
-    });
-  });
-
-  describe('inline members', () => {
-    it('generates component with inlined member with jsDoc', () => {
-      const component = createAngularComponentDefinition('my-component', ['myMember'], [], [], false, false, [
-        {
-          docs: {
-            tags: [{ name: 'deprecated', text: 'use v2 of this API' }],
-            text: 'This is a jsDoc for myMember',
-          },
-          name: 'myMember',
-        } as ComponentCompilerProperty,
-      ]);
-
-      expect(component).toEqual(`@ProxyCmp({
-  inputs: ['myMember']
-})
-@Component({
-  selector: 'my-component',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['myMember'],
-})
-export class MyComponent {
-  protected el: HTMLElement;
-    /**
-   * This is a jsDoc for myMember @deprecated use v2 of this API
-   */
-  myMember: Components.MyComponent['myMember'];
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
+  ngOnChanges(): void {
+    if (typeof this.replaceTagDirective === 'object' && this.replaceTagDirective !== null && typeof this.replaceTagDirective.handlePropertyChanges === 'function') {
+      this.replaceTagDirective.handlePropertyChanges();
+    }
+    this.changeDetectorRef.detectChanges();
   }
 }`);
     });
@@ -323,21 +477,6 @@ describe('createComponentTypeDefinition()', () => {
         tags: [],
       },
     },
-    {
-      name: 'my/slash/event',
-      complexType: {
-        references: {
-          MySlashEvent: {
-            location: 'import',
-          },
-        },
-        original: 'MySlashEvent',
-      },
-      docs: {
-        text: '',
-        tags: [],
-      },
-    },
   ];
 
   describe('www build', () => {
@@ -345,11 +484,10 @@ describe('createComponentTypeDefinition()', () => {
       const definition = createComponentTypeDefinition('component', 'MyComponent', testEvents, '@ionic/core');
 
       expect(definition).toEqual(
-        `import type { MyEvent as IMyComponentMyEvent } from '@ionic/core';
-import type { MyOtherEvent as IMyComponentMyOtherEvent } from '@ionic/core';
-import type { MyDoclessEvent as IMyComponentMyDoclessEvent } from '@ionic/core';
-import type { MyKebabEvent as IMyComponentMyKebabEvent } from '@ionic/core';
-import type { MySlashEvent as IMyComponentMySlashEvent } from '@ionic/core';
+        `import { MyEvent as IMyComponentMyEvent } from '@ionic/core';
+import { MyOtherEvent as IMyComponentMyOtherEvent } from '@ionic/core';
+import { MyDoclessEvent as IMyComponentMyDoclessEvent } from '@ionic/core';
+import { MyKebabEvent as IMyComponentMyKebabEvent } from '@ionic/core';
 
 export declare interface MyComponent extends Components.MyComponent {
   /**
@@ -364,8 +502,6 @@ export declare interface MyComponent extends Components.MyComponent {
   myDoclessEvent: EventEmitter<CustomEvent<IMyComponentMyDoclessEvent>>;
 
   'my-kebab-event': EventEmitter<CustomEvent<IMyComponentMyKebabEvent>>;
-
-  'my/slash/event': EventEmitter<CustomEvent<IMyComponentMySlashEvent>>;
 }`
       );
     });
@@ -421,7 +557,6 @@ export declare interface MyComponent extends Components.MyComponent {
               resolved: '{ side: Side; }',
               references: {
                 Side: {
-                  id: '',
                   location: 'import',
                   path: '../../interfaces',
                 },
@@ -434,9 +569,9 @@ export declare interface MyComponent extends Components.MyComponent {
       );
 
       expect(definition).toEqual(
-        `import type { MyEvent as IMyComponentMyEvent } from '@ionic/core';
-import type { Currency as IMyComponentCurrency } from '@ionic/core';
-import type { Side as IMyComponentSide } from '@ionic/core';
+        `import { MyEvent as IMyComponentMyEvent } from '@ionic/core';
+import { Currency as IMyComponentCurrency } from '@ionic/core';
+import { Side as IMyComponentSide } from '@ionic/core';
 
 export declare interface MyComponent extends Components.MyComponent {
 
@@ -460,11 +595,10 @@ export declare interface MyComponent extends Components.MyComponent {
         );
 
         expect(definition).toEqual(
-          `import type { MyEvent as IMyComponentMyEvent } from '@ionic/core/custom-elements';
-import type { MyOtherEvent as IMyComponentMyOtherEvent } from '@ionic/core/custom-elements';
-import type { MyDoclessEvent as IMyComponentMyDoclessEvent } from '@ionic/core/custom-elements';
-import type { MyKebabEvent as IMyComponentMyKebabEvent } from '@ionic/core/custom-elements';
-import type { MySlashEvent as IMyComponentMySlashEvent } from '@ionic/core/custom-elements';
+          `import { MyEvent as IMyComponentMyEvent } from '@ionic/core/custom-elements';
+import { MyOtherEvent as IMyComponentMyOtherEvent } from '@ionic/core/custom-elements';
+import { MyDoclessEvent as IMyComponentMyDoclessEvent } from '@ionic/core/custom-elements';
+import { MyKebabEvent as IMyComponentMyKebabEvent } from '@ionic/core/custom-elements';
 
 export declare interface MyComponent extends Components.MyComponent {
   /**
@@ -479,8 +613,6 @@ export declare interface MyComponent extends Components.MyComponent {
   myDoclessEvent: EventEmitter<CustomEvent<IMyComponentMyDoclessEvent>>;
 
   'my-kebab-event': EventEmitter<CustomEvent<IMyComponentMyKebabEvent>>;
-
-  'my/slash/event': EventEmitter<CustomEvent<IMyComponentMySlashEvent>>;
 }`
         );
       });

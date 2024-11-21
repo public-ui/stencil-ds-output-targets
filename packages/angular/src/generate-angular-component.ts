@@ -1,7 +1,7 @@
 import type { CompilerJsDoc, ComponentCompilerEvent, ComponentCompilerProperty } from '@stencil/core/internal';
 
-import { createComponentEventTypeImports, dashToCamelCase, dashToPascalCase, formatToQuotedList } from './utils';
 import type { OutputType } from './types';
+import { createComponentEventTypeImports, dashToPascalCase, formatToQuotedList } from './utils';
 
 /**
  * Creates a property declaration.
@@ -77,26 +77,6 @@ export const createAngularComponentDefinition = (
   if (standalone && includeImportCustomElements) {
     standaloneOption = `\n  standalone: true,`;
   }
-
-  const inputFields = hasInputs ? inputs.map((input) => `  ${dashToCamelCase(input)}: any;`).join('\n') : '';
-  const inputAttributes = hasInputs ? inputs.map((input) => `[${input}]="${input}"`).join(' ') : '';
-
-  const template = `
-    <ng-container *ngIf="hasTagNameTransformer; else defaultCase">
-      <stencil-ng-proxy
-        ${inputAttributes}
-        *replaceTag="tagName"
-        #replaceTagHost
-      >
-        <ng-container *ngTemplateOutlet="ngContentOutlet"></ng-container>
-      </stencil-ng-proxy>
-    </ng-container>
-    <ng-template #defaultCase>
-      <ng-container *ngTemplateOutlet="ngContentOutlet"></ng-container>
-    </ng-template>
-    <ng-template #ngContentOutlet>
-      <ng-content></ng-content>
-    </ng-template>`;
 
   const propertyDeclarations = inlineComponentProps.map((m) =>
     createPropertyDeclaration(m, `Components.${tagNameAsPascal}['${m.name}']`)
