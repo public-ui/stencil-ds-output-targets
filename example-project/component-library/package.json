@@ -60,10 +60,10 @@
     "prettier.dry-run": "pnpm run prettier.base --list-different"
   },
   "devDependencies": {
-    "@stencil/angular-output-target": "workspace:*",
+    "@public-ui/stencil-angular-output-target": "workspace:*",
     "@stencil/core": "^4.22.1",
-    "@stencil/react-output-target": "workspace:*",
-    "@stencil/vue-output-target": "workspace:*",
+    "@public-ui/stencil-react-output-target": "workspace:*",
+    "@public-ui/stencil-vue-output-target": "workspace:*",
     "@types/puppeteer": "2.0.1",
     "jest-cli": "26.0.1"
   }

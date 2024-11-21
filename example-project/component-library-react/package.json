@@ -14,7 +14,7 @@
     "test": "wdio run ./wdio.conf.ts"
   },
   "dependencies": {
-    "@stencil/react-output-target": "workspace:*",
+    "@public-ui/stencil-react-output-target": "workspace:*",
     "component-library": "workspace:*",
     "react-dom": "^18.3.1"
   },
