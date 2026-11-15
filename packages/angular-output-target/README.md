@@ -1,5 +1,7 @@
 # @public-ui/stencil-angular-output-target
 
+> **Superseded:** KoliBri 5 generates its Angular adapter with the official [`@stencil/angular-output-target`](https://www.npmjs.com/package/@stencil/angular-output-target) and the native tag transformer of Stencil (`setTagTransformer`, `transformTag`). This fork is maintained for KoliBri 4 only. See the [migration concept](https://github.com/public-ui/kolibri/blob/develop/docs/OUTPUT_TARGETS_MIGRATION_CONCEPT.md) (public-ui/kolibri#11395).
+
 Stencil can generate Angular component wrappers for your web components. This allows your Stencil components to be used within an Angular application. The benefits of using Stencil's component wrappers over the standard web components include:
 
 - Angular component wrappers will be detached from change detection, preventing unnecessary repaints of your web component.
