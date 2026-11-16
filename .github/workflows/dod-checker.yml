@@ -4,13 +4,13 @@ on:
     types: [opened, edited]
 
 concurrency:
-  group: ci-pr-{{ github.event.number }}
+  group: ci-pr-${{ github.event.number }}
   cancel-in-progress: true
 
 jobs:
   check-dod:
     if: contains(github.actor, 'dependabot') == false
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Clone Repo
         uses: actions/checkout@v3
